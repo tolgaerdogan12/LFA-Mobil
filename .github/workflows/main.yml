@@ -3,14 +3,28 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-    # 1. İşletim Sistemini Sabitledik (22.04 Android için en stabili)
     runs-on: ubuntu-22.04
 
     steps:
-      # Kodları Çek
+      # 1. Kodları Çek
       - uses: actions/checkout@v4
 
-      # 2. Gerekli Araçları Kur (libtinfo5 çıkarıldı, Java 17 eklendi)
+      # 2. Disk Yerini Temizle (Gereksizleri sil ki yer acilsin)
+      - name: Free Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+      # 3. Java 17'yi Kur ve ZORLA (Gradle Hatasini Cozen Yer)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 4. Diger Gerekli Araclari Kur
       - name: Install System Dependencies
         run: |
           sudo apt-get update
@@ -19,20 +33,20 @@ jobs:
             libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
             libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev \
             autoconf autoconf-archive automake libtool pkg-config libncurses5-dev \
-            libncursesw5-dev cmake libffi-dev libssl-dev zip unzip openjdk-17-jdk
+            libncursesw5-dev cmake libffi-dev libssl-dev zip unzip
 
-      # 3. Buildozer'ı Kur
+      # 5. Buildozer'ı Kur
       - name: Install Buildozer
         run: |
           pip3 install --upgrade pip
           pip3 install buildozer cython==0.29.33
 
-      # 4. Derlemeyi Başlat ('yes' komutu lisansları otomatik onaylar)
+      # 6. Derlemeyi Başlat
       - name: Build with Buildozer
         run: |
           yes | buildozer android debug
 
-      # 5. APK'yı Yükle (v4 sürümü - Hata vermez)
+      # 7. APK'yı Yükle
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

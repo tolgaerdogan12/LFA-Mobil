@@ -6,9 +6,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      # 1. Kodları Çek (Checkout v4 yaptık)
+      - uses: actions/checkout@v4
 
-      # 1. Buildozer ile APK Derle
+      # 2. Buildozer ile Derle
       - name: Build with Buildozer
         uses: ArtemSBulgakov/buildozer-action@v1
         id: buildozer
@@ -16,9 +17,9 @@ jobs:
           command: buildozer android debug
           buildozer_version: master
 
-      # 2. Oluşan APK'yı Yükle (Artifact)
+      # 3. APK'yı Yükle (Artifact v4 yaptık - Hatayı Çözen Yer Burası)
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: LFA-Uygulama
           path: bin/*.apk

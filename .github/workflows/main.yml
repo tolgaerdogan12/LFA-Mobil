@@ -6,18 +6,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Kodları Çek (Checkout v4 yaptık)
+      # 1. Kodları Çek
       - uses: actions/checkout@v4
 
-      # 2. Buildozer ile Derle
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
-        with:
-          command: buildozer android debug
-          buildozer_version: master
+      # 2. Gerekli Linux Araçlarını ve Java'yı Kur (Colab'deki listenin aynısı)
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3-pip build-essential git python3 python3-dev ffmpeg \
+            libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
+            libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev \
+            autoconf autoconf-archive automake libtool pkg-config libncurses5-dev \
+            libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev zip unzip openjdk-17-jdk
 
-      # 3. APK'yı Yükle (Artifact v4 yaptık - Hatayı Çözen Yer Burası)
+      # 3. Buildozer'ı Kur
+      - name: Install Buildozer
+        run: |
+          pip3 install --upgrade pip
+          pip3 install buildozer cython==0.29.33
+
+      # 4. Derlemeyi Başlat (yes komutu lisans sorularına otomatik 'evet' der)
+      - name: Build with Buildozer
+        run: |
+          yes | buildozer android debug
+
+      # 5. APK'yı Yükle (Artifact v4)
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

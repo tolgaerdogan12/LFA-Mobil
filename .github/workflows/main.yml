@@ -9,22 +9,14 @@ jobs:
       # 1. Kodları Çek
       - uses: actions/checkout@v4
 
-      # 2. Disk Yerini Temizle (Gereksizleri sil ki yer acilsin)
-      - name: Free Disk Space
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf "/usr/local/share/boost"
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-
-      # 3. Java 17'yi Kur ve ZORLA (Gradle Hatasini Cozen Yer)
+      # 2. Java 17 Kur (Gradle hatasini kesin cozer)
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 4. Diger Gerekli Araclari Kur
+      # 3. Gerekli Araclari Kur
       - name: Install System Dependencies
         run: |
           sudo apt-get update
@@ -35,18 +27,19 @@ jobs:
             autoconf autoconf-archive automake libtool pkg-config libncurses5-dev \
             libncursesw5-dev cmake libffi-dev libssl-dev zip unzip
 
-      # 5. Buildozer'ı Kur
+      # 4. Buildozer'ı Kur
       - name: Install Buildozer
         run: |
           pip3 install --upgrade pip
           pip3 install buildozer cython==0.29.33
 
-      # 6. Derlemeyi Başlat
+      # 5. Temizlik Yap ve Derle (Ağ hatası olursa temizden başlasın)
       - name: Build with Buildozer
         run: |
+          yes | buildozer android clean
           yes | buildozer android debug
 
-      # 7. APK'yı Yükle
+      # 6. APK'yı Yükle
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

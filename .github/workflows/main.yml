@@ -3,13 +3,14 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # 1. İşletim Sistemini Sabitledik (22.04 Android için en stabili)
+    runs-on: ubuntu-22.04
 
     steps:
-      # 1. Kodları Çek
+      # Kodları Çek
       - uses: actions/checkout@v4
 
-      # 2. Gerekli Linux Araçlarını ve Java'yı Kur (Colab'deki listenin aynısı)
+      # 2. Gerekli Araçları Kur (libtinfo5 çıkarıldı, Java 17 eklendi)
       - name: Install System Dependencies
         run: |
           sudo apt-get update
@@ -18,7 +19,7 @@ jobs:
             libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
             libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev \
             autoconf autoconf-archive automake libtool pkg-config libncurses5-dev \
-            libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev zip unzip openjdk-17-jdk
+            libncursesw5-dev cmake libffi-dev libssl-dev zip unzip openjdk-17-jdk
 
       # 3. Buildozer'ı Kur
       - name: Install Buildozer
@@ -26,12 +27,12 @@ jobs:
           pip3 install --upgrade pip
           pip3 install buildozer cython==0.29.33
 
-      # 4. Derlemeyi Başlat (yes komutu lisans sorularına otomatik 'evet' der)
+      # 4. Derlemeyi Başlat ('yes' komutu lisansları otomatik onaylar)
       - name: Build with Buildozer
         run: |
           yes | buildozer android debug
 
-      # 5. APK'yı Yükle (Artifact v4)
+      # 5. APK'yı Yükle (v4 sürümü - Hata vermez)
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

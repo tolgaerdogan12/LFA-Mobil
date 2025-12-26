@@ -1,0 +1,24 @@
+name: APK Yapici
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # 1. Buildozer ile APK Derle
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          command: buildozer android debug
+          buildozer_version: master
+
+      # 2. Oluşan APK'yı Yükle (Artifact)
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: LFA-Uygulama
+          path: bin/*.apk

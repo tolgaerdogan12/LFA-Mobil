@@ -9,14 +9,14 @@ jobs:
       # 1. Kodları Çek
       - uses: actions/checkout@v4
 
-      # 2. Java 17 Kur (Gradle hatasini kesin cozer)
+      # 2. Java 17 Kur (Gradle için şart)
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Gerekli Araclari Kur
+      # 3. Gerekli Araçları Kur
       - name: Install System Dependencies
         run: |
           sudo apt-get update
@@ -33,10 +33,9 @@ jobs:
           pip3 install --upgrade pip
           pip3 install buildozer cython==0.29.33
 
-      # 5. Temizlik Yap ve Derle (Ağ hatası olursa temizden başlasın)
+      # 5. Derlemeyi Başlat (Clean komutunu sildik)
       - name: Build with Buildozer
         run: |
-          yes | buildozer android clean
           yes | buildozer android debug
 
       # 6. APK'yı Yükle

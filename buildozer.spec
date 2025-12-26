@@ -15,6 +15,9 @@ source.dir = .
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas
 
+# --- İŞTE EKSİK OLAN SATIR BURASI ---
+version = 0.1
+
 # (list) Application requirements
 # DİKKAT: openssl ve urllib3 çökme sorununu engeller.
 requirements = python3,kivy==2.2.1,android,requests,openssl,urllib3
@@ -123,28 +126,22 @@ android.debug_artifact = apk
 # (list) Android additional libraries to copy into libs/armeabi
 #android.add_libs_armeabi = libs/android-vsupport/v4/android-support-v4.jar
 
-# (bool) Indicate whether the screen should stay on
-# Don't sleep on app
-#android.wakelock = False
+# (bool) Indicate if the application should be fullscreen or not
+#android.fullscreen = False
 
-# (list) Android application meta-data to set (key=value format)
-#android.meta_data =
+# (list) Android service to declare
+#android.services = 
 
-# (list) Android library project to add (will be added in the
-# project.properties automatically.)
-#android.library_references =
+# (str) Android entry point, default is ok for Kivy-based app
+#android.entrypoint = org.kivy.android.PythonActivity
 
-# (str) Android logcat filters to use
-#android.logcat_filters = *:S python:D
-
-# (str) Android additional adb arguments
-#android.adb_args = -H host.docker.internal
+# (list) Android app theme, default is ok
+#android.apptheme = "@android:style/Theme.NoTitleBar"
 
 # (bool) Copy library instead of making a libpymodules.so
 #android.copy_libs = 1
 
 # (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
-# Bu satır hem eski hem yeni telefonları kapsar.
 android.archs = arm64-v8a, armeabi-v7a
 
 # (int) overrides automatic numeric version from date
